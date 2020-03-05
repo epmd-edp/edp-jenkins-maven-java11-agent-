@@ -1,24 +1,53 @@
 # Copyright 2020 EPAM Systems.
 
+
+
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 # http://www.apache.org/licenses/LICENSE-2.0
 
+
+
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
+
+
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker-registry.default.svc:5000/edp-cicd-delivery/jenkins:2.176.3
-ENV HELM_VERSION="v2.15.1"
-COPY plugins.txt /opt/openshift/configuration/plugins.txt
-USER root
-RUN wget -q https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > /usr/bin/helm \
-    && chmod +x /usr/bin/helm \
-    && rm -rf linux-amd64
-RUN /usr/local/bin/install-plugins.sh /opt/openshift/configuration/plugins.txt
-USER jenkins
+FROM openshift/jenkins-slave-base-centos7:v3.11
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV MAVEN_VERSION=3.6.3 \
+    PATH=$PATH:/opt/apache-maven-${MAVEN_VERSION}/bin
+
+# Install Java 11
+RUN INSTALL_PKGS="java-11-openjdk-devel.x86_64" && \
+    curl https://raw.githubusercontent.com/cloudrouter/centos-repo/master/CentOS-Base.repo -o /etc/yum.repos.d/CentOS-Base.repo && \
+    curl http://mirror.centos.org/centos-7/7/os/x86_64/RPM-GPG-KEY-CentOS-7 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
+    yum install -y $INSTALL_PKGS && \
+    rpm -V java-11-openjdk-devel.x86_64 && \
+    yum clean all -y
+
+RUN yum remove java-1.8.0-openjdk-headless -y
+
+# Install Maven
+RUN curl -L --output /tmp/apache-maven-bin.zip https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip && \
+    unzip -q /tmp/apache-maven-bin.zip -d /opt && \
+    ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven && \
+    rm /tmp/apache-maven-bin.zip
+
+WORKDIR $HOME/.m2
+
+COPY contrib/bin/scl_enable /usr/local/bin/scl_enable
+COPY contrib/bin/configure-agent /usr/local/bin/configure-agent
+COPY ./contrib/settings.xml $HOME/.m2/
+
+RUN chown -R "1001:0" "$HOME" && \
+    chmod -R "g+rw" "$HOME"
+
+USER 1001
