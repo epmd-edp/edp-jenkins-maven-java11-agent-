@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "790ad5d6_87f81e44",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000012
+      },
+      "writtenOn": "2020-03-06T08:56:20Z",
+      "side": 0,
+      "message": "Why deleted ?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 32
+      },
+      "revId": "780118e72b0e7b0803894c2d4a52cbeeca31c3ae",
+      "serverId": "0350cb7f-c1b1-4710-a647-f6632dbafb3c",
+      "unresolved": false
+    }
+  ]
+}
