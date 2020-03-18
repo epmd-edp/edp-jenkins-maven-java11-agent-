@@ -1,0 +1,8 @@
+Verified+1: CI Jenkins
+Code-Review+1: Mykola Marusenko <mykola_marusenko@epam.com>
+Code-Review+2: Iryna Churkina <iryna_churkina@epam.com>
+Submitted-by: Iryna Churkina <iryna_churkina@epam.com>
+Submitted-at: Wed, 18 Mar 2020 08:17:19 +0000
+Reviewed-on: https://gerrit-oc-green-edp-cicd.delivery.aws.main.edp.projects.epam.com/c/edp-jenkins-maven-java11-agent/+/536
+Project: edp-jenkins-maven-java11-agent
+Branch: refs/heads/master
