@@ -9,12 +9,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openshift/jenkins-slave-base-centos7:v3.11
+FROM epamedp/edp-jenkins-base-agent:1.0.0
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV MAVEN_VERSION=3.6.3
 ENV PATH=$PATH:/opt/apache-maven-${MAVEN_VERSION}/bin
+
+USER root
 
 # Install Java 11
 RUN INSTALL_PKGS="java-11-openjdk-devel.x86_64" && \
