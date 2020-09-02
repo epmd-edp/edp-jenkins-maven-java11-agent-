@@ -9,22 +9,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openshift/jenkins-slave-base-centos7:v3.11
+FROM epamedp/edp-jenkins-base-agent:1.0.0
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV MAVEN_VERSION=3.6.3
 ENV PATH=$PATH:/opt/apache-maven-${MAVEN_VERSION}/bin
 
+USER root
+
 # Install Java 11
-RUN INSTALL_PKGS="java-11-openjdk-devel.x86_64" && \
-    curl https://raw.githubusercontent.com/cloudrouter/centos-repo/master/CentOS-Base.repo -o /etc/yum.repos.d/CentOS-Base.repo && \
+RUN curl https://raw.githubusercontent.com/cloudrouter/centos-repo/master/CentOS-Base.repo -o /etc/yum.repos.d/CentOS-Base.repo && \
     curl http://mirror.centos.org/centos-7/7/os/x86_64/RPM-GPG-KEY-CentOS-7 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
-    yum install -y $INSTALL_PKGS && \
+    yum install -y java-11-openjdk-devel.x86_64 && \
     rpm -V java-11-openjdk-devel.x86_64 && \
     yum clean all -y
-
-RUN yum remove java-1.8.0-openjdk-headless -y
 
 # Install Maven
 RUN curl -L --output /tmp/apache-maven-bin.zip https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.zip && \
