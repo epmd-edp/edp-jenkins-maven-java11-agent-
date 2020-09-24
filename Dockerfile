@@ -18,11 +18,8 @@ ENV PATH=$PATH:/opt/apache-maven-${MAVEN_VERSION}/bin
 
 USER root
 
-# Install Java 11
-RUN curl https://raw.githubusercontent.com/cloudrouter/centos-repo/master/CentOS-Base.repo -o /etc/yum.repos.d/CentOS-Base.repo && \
-    curl http://mirror.centos.org/centos-7/7/os/x86_64/RPM-GPG-KEY-CentOS-7 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
-    yum install -y java-11-openjdk-devel.x86_64 && \
-    rpm -V java-11-openjdk-devel.x86_64 && \
+RUN yum remove -y java-11-openjdk-headless.x86_64 && \
+    yum install -y java-1.8.0-openjdk-devel.x86_64 && \
     yum clean all -y
 
 # Install Maven
